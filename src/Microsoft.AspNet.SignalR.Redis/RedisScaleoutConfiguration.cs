@@ -13,7 +13,12 @@ namespace Microsoft.AspNet.SignalR
     public class RedisScaleoutConfiguration : ScaleoutConfiguration
     {
         public RedisScaleoutConfiguration(string server, int port, string password, string eventKey)
-            : this(CreateConnectionString(server, port, password), eventKey)
+            : this(CreateConnectionString(server, port, password, false), eventKey)
+        {
+        }
+
+        public RedisScaleoutConfiguration(string server, int port, string password, bool useSsl, string eventKey)
+            : this(CreateConnectionString(server, port, password, useSsl), eventKey)
         {
         }
 
@@ -50,9 +55,9 @@ namespace Microsoft.AspNet.SignalR
         /// </summary>
         public string EventKey { get; private set; }
 
-        private static string CreateConnectionString(string server, int port, string password)
+        private static string CreateConnectionString(string server, int port, string password, bool useSsl)
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0}:{1}, password={2}, abortConnect=false", server, port, password);
+            return string.Format(CultureInfo.CurrentCulture, "{0}:{1}, password={2}, abortConnect=false, ssl={3}", server, port, password, useSsl ? "true" : "false");
         }
     }
 }
